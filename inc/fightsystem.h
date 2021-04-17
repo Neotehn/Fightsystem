@@ -19,5 +19,11 @@
 #include <fcntl.h>
 #include <math.h>
 
+typedef struct fight_buttons_s {
+    sfRectangleShape **rect;
+    sfVector2f *pos;
+    sfFont *font;
+    sfText *text;
+} fbutton_t;
 
 #endif /* !FIGHTSYSTEM_H_ */
