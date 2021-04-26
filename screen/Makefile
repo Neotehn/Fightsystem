@@ -5,7 +5,9 @@
 ## makefile
 ##
 
-SRC	=	./main.c
+SRC	=	./main.c\
+		./fight.c\
+		./stats_generation.c\
 
 NAME	=	my_rpg
 

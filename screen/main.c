@@ -43,7 +43,7 @@ void display_objects(fbutton_t *button, sfRenderWindow *win)
     }
 }
 
-void change_state_button_left(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
+void change_state_button_left(fbutton_t *button, sfRenderWindow *win, sfVector2i pos, player_stats_t *player_stats, monster_stats_t *monster_stats)
 {
     static int check = 0;
 
@@ -54,6 +54,7 @@ void change_state_button_left(fbutton_t *button, sfRenderWindow *win, sfVector2i
             check = 1;
         } else {
             if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                my_fight(1, player_stats, monster_stats);
                 printf("ATTACK\n");
                 check = 0;
             }
@@ -65,6 +66,7 @@ void change_state_button_left(fbutton_t *button, sfRenderWindow *win, sfVector2i
             check = 1;
         } else {
             if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                my_fight(2, player_stats, monster_stats);
                 printf("DEFENSE\n");
                 check = 0;
             }
@@ -72,7 +74,7 @@ void change_state_button_left(fbutton_t *button, sfRenderWindow *win, sfVector2i
     }
 }
 
-void change_state_button_right(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
+void change_state_button_right(fbutton_t *button, sfRenderWindow *win, sfVector2i pos, player_stats_t *player_stats, monster_stats_t *monster_stats)
 {
     static int check = 0;
 
@@ -83,6 +85,7 @@ void change_state_button_right(fbutton_t *button, sfRenderWindow *win, sfVector2
             check = 1;
         } else {
             if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                my_fight(3, player_stats, monster_stats);
                 printf("MAGIC\n");
                 check = 0;
             }
@@ -94,6 +97,7 @@ void change_state_button_right(fbutton_t *button, sfRenderWindow *win, sfVector2
             check = 1;
         } else {
             if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                my_fight(4, player_stats, monster_stats);
                 printf("RUN AWAY\n");
                 check = 0;
             }
@@ -101,7 +105,7 @@ void change_state_button_right(fbutton_t *button, sfRenderWindow *win, sfVector2
     }
 }
 
-void change_state_button(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
+void change_state_button(fbutton_t *button, sfRenderWindow *win, sfVector2i pos, player_stats_t *player_stats, monster_stats_t *monster_stats)
 {
     int check = 1;
     pos = sfMouse_getPosition((const sfWindow *) win);
@@ -109,9 +113,9 @@ void change_state_button(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
     for (int i = 0; i < 4; i++)
         sfRectangleShape_setFillColor(button->rect[i], sfRed);
     if (pos.y >= 400 && pos.y < 500) {
-        change_state_button_left(button, win, pos);
+        change_state_button_left(button, win, pos, player_stats, monster_stats);
     } else if (pos.y >= 500 && pos.y < 600) {
-        change_state_button_right(button, win, pos);
+        change_state_button_right(button, win, pos, player_stats, monster_stats);
     }
 }
 
@@ -130,6 +134,11 @@ int main()
     sfRenderWindow* window;
     sfVector2i pos;
     fbutton_t *buttons = malloc(sizeof(fbutton_t));
+    player_stats_t *player_stats = malloc(sizeof( player_stats_t));                   
+    monster_stats_t *monster_stats = malloc(sizeof( monster_stats_t));
+    
+    player_stats = my_player_stats_generation(player_stats);        
+    monster_stats = my_monster_stats_generation(monster_stats, player_stats->level);
 
     if (!buttons)
         exit(84);
@@ -142,7 +151,7 @@ int main()
     while (sfRenderWindow_isOpen(window)) {
         eventhandler_helper(window, event, buttons);
         sfRenderWindow_clear(window, sfBlack);
-        change_state_button(buttons, window, pos);
+        change_state_button(buttons, window, pos, player_stats, monster_stats);
         display_objects(buttons, window);
         sfRenderWindow_display(window);
     }
