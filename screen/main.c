@@ -45,27 +45,59 @@ void display_objects(fbutton_t *button, sfRenderWindow *win)
 
 void change_state_button_left(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
 {
+    static int check = 0;
+
     if (pos.x >= 0 && pos.x < 400) {
         sfRectangleShape_setFillColor(button->rect[0], (sfColor) {255, 0, 0, 180});
-        if (sfMouse_isButtonPressed(sfMouseLeft))
+        if (sfMouse_isButtonPressed(sfMouseLeft) && (check == 0 || check == 1)) {
             sfRectangleShape_setFillColor(button->rect[0], (sfColor) {255, 0, 0, 30});
+            check = 1;
+        } else {
+            if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                printf("ATTACK\n");
+                check = 0;
+            }
+        }
     } else if (pos.x >= 400 && pos.x < 800) {
         sfRectangleShape_setFillColor(button->rect[2], (sfColor) {255, 0, 0, 180});
-        if (sfMouse_isButtonPressed(sfMouseLeft))
+        if (sfMouse_isButtonPressed(sfMouseLeft) && (check == 0 || check == 1)) {
             sfRectangleShape_setFillColor(button->rect[2], (sfColor) {255, 0, 0, 30});
+            check = 1;
+        } else {
+            if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                printf("DEFENSE\n");
+                check = 0;
+            }
+        }
     }
 }
 
 void change_state_button_right(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
 {
+    static int check = 0;
+
     if (pos.x >= 0 && pos.x < 400) {
         sfRectangleShape_setFillColor(button->rect[1], (sfColor) {255, 0, 0, 180});
-        if (sfMouse_isButtonPressed(sfMouseLeft))
+        if (sfMouse_isButtonPressed(sfMouseLeft) && (check == 0 || check == 1)) {
             sfRectangleShape_setFillColor(button->rect[1], (sfColor) {255, 0, 0, 30});
+            check = 1;
+        } else {
+            if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                printf("MAGIC\n");
+                check = 0;
+            }
+        }
     } else if (pos.x >= 400 && pos.x < 800) {
         sfRectangleShape_setFillColor(button->rect[3], (sfColor) {255, 0, 0, 180});
-        if (sfMouse_isButtonPressed(sfMouseLeft))
+        if (sfMouse_isButtonPressed(sfMouseLeft) && (check == 0 || check == 1)) {
             sfRectangleShape_setFillColor(button->rect[3], (sfColor) {255, 0, 0, 30});
+            check = 1;
+        } else {
+            if (!sfMouse_isButtonPressed(sfMouseLeft) && check == 1) {
+                printf("RUN AWAY\n");
+                check = 0;
+            }
+        }
     }
 }
 
@@ -80,6 +112,14 @@ void change_state_button(fbutton_t *button, sfRenderWindow *win, sfVector2i pos)
         change_state_button_left(button, win, pos);
     } else if (pos.y >= 500 && pos.y < 600) {
         change_state_button_right(button, win, pos);
+    }
+}
+
+void eventhandler_helper(sfRenderWindow *win, sfEvent event, fbutton_t * button)
+{
+    while (sfRenderWindow_pollEvent(win, &event)) {
+        if (event.type == sfEvtClosed)
+            sfRenderWindow_close(win);
     }
 }
 
@@ -100,10 +140,7 @@ int main()
     if (!window)
         return EXIT_FAILURE;
     while (sfRenderWindow_isOpen(window)) {
-        while (sfRenderWindow_pollEvent(window, &event)) {
-            if (event.type == sfEvtClosed)
-                sfRenderWindow_close(window);
-        }
+        eventhandler_helper(window, event, buttons);
         sfRenderWindow_clear(window, sfBlack);
         change_state_button(buttons, window, pos);
         display_objects(buttons, window);
