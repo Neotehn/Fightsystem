@@ -41,6 +41,8 @@ void display_objects(fbutton_t *button, window_t *win)
     for (int i = 0; i < 4; i++) {
         sfRenderWindow_drawRectangleShape(win->window, button->rect[i], NULL);
     }
+    sfRenderWindow_drawRectangleShape(win->window, win->player, NULL);
+    sfRenderWindow_drawRectangleShape(win->window, win->enemy, NULL);
 }
 
 void change_state_button_left(fbutton_t *button, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats)
@@ -140,8 +142,8 @@ sfVector2f calculate_move_offset(sfVector2f dest, sfVector2f current_point)
         if (tmp.y < 0)
             y = 1;
     }
-    tmp = (sfVector2f) {tmp.x / (tmp.x + tmp.y) * 0.30,\
-    tmp.y / (tmp.y + tmp.x) * 0.30};
+    tmp = (sfVector2f) {tmp.x / (tmp.x + tmp.y) * 0.60,\
+    tmp.y / (tmp.y + tmp.x) * 0.60};
     if (x == 1 || y == 1) {
         if (x == 1)
             tmp.x *= -1;
@@ -153,29 +155,29 @@ sfVector2f calculate_move_offset(sfVector2f dest, sfVector2f current_point)
 
 void intro_scene(window_t *win)
 {
-    sfRectangleShape *player = sfRectangleShape_create();
-    sfRectangleShape *enemy = sfRectangleShape_create();
-    sfVector2f pos_p = (sfVector2f) {-200, 300};
+    sfVector2f pos_p = (sfVector2f) {-200, 200};
     sfVector2f pos_e = (sfVector2f) {1000, 200};
     sfVector2f offset = (sfVector2f) {0, 0};
 
-    sfRectangleShape_setPosition(player, pos_p);
-    sfRectangleShape_setPosition(enemy, pos_e);
-    sfRectangleShape_setSize(player, (sfVector2f) {20, 20});
-    sfRectangleShape_setSize(enemy, (sfVector2f) {20, 20});
-    sfRectangleShape_setFillColor(player, sfWhite);
-    sfRectangleShape_setFillColor(enemy, sfWhite);
+    sfRectangleShape_setPosition(win->player, pos_p);
+    sfRectangleShape_setPosition(win->enemy, pos_e);
+    sfRectangleShape_setSize(win->player, (sfVector2f) {20, 20});
+    sfRectangleShape_setSize(win->enemy, (sfVector2f) {20, 20});
+    sfRectangleShape_setFillColor(win->player, sfWhite);
+    sfRectangleShape_setFillColor(win->enemy, sfWhite);
     while (1) {
         sfRenderWindow_clear(win->window, sfBlack);
-        offset = calculate_move_offset((sfVector2f) {200, 400}, pos_p);
+        offset = calculate_move_offset((sfVector2f) {200, 300}, pos_p);
         pos_p = (sfVector2f) {pos_p.x + offset.x, pos_p.y + offset.y};
-        sfRectangleShape_setPosition(player, pos_p);
+        sfRectangleShape_setPosition(win->player, pos_p);
         offset = calculate_move_offset((sfVector2f) {600, 100}, pos_e);
         pos_e = (sfVector2f) {pos_e.x + offset.x, pos_e.y + offset.y};
-        sfRectangleShape_setPosition(enemy, pos_e);
-        sfRenderWindow_drawRectangleShape(win->window, player, NULL);
-        sfRenderWindow_drawRectangleShape(win->window, enemy, NULL);
+        sfRectangleShape_setPosition(win->enemy, pos_e);
+        sfRenderWindow_drawRectangleShape(win->window, win->player, NULL);
+        sfRenderWindow_drawRectangleShape(win->window, win->enemy, NULL);
         sfRenderWindow_display(win->window);
+        if (pos_p.x >= 199 && pos_p.y >= 299)
+            break;
     }
 }
 
@@ -183,6 +185,8 @@ int main()
 {
     window_t *win = malloc(sizeof(window_t));
     win->mode = (sfVideoMode) {800, 600, 32};
+    win->player = sfRectangleShape_create();
+    win->enemy = sfRectangleShape_create();
     fbutton_t *buttons = malloc(sizeof(fbutton_t));
     player_stats_t *player_stats = malloc(sizeof( player_stats_t));                   
     monster_stats_t *monster_stats = malloc(sizeof( monster_stats_t));

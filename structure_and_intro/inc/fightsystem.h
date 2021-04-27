@@ -31,6 +31,8 @@ typedef struct window_stats_s {
     sfEvent event;
     sfRenderWindow* window;
     sfVector2i pos;
+    sfRectangleShape *player;
+    sfRectangleShape *enemy;
 } window_t;
 
 typedef struct player_stats_s {
