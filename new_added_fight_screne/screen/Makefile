@@ -5,13 +5,9 @@
 ## makefile
 ##
 
-SRC	=	./main.c \
-		./fight.c \
-		./stats_generation.c \
-		./call_buttons.c \
-		./change_state_button.c \
-		./intro_scene.c \
-		./declare_buttons.c \
+SRC	=	./main.c\
+		./fight.c\
+		./stats_generation.c\
 
 NAME	=	my_rpg
 
