@@ -26,6 +26,18 @@ typedef struct fight_buttons_s {
     sfText *text;
 } fbutton_t;
 
+typedef struct window_stats_s {
+    sfVideoMode mode;
+    sfEvent event;
+    sfRenderWindow* window;
+    sfVector2i pos;
+    sfVector2i pos_pics;
+    sfRectangleShape *player;
+    sfRectangleShape *enemy;
+    sfSprite **sprite;
+    sfTexture **texture;
+} window_t;
+
 typedef struct player_stats_s {
     int level;
     int hp;
@@ -33,6 +45,7 @@ typedef struct player_stats_s {
     int defense;
     int magic;
     int speed;
+    int decision;
 } player_stats_t;
 
 typedef struct monster_stats_s {
@@ -41,11 +54,23 @@ typedef struct monster_stats_s {
     int defense;
     int magic;
     int speed;
+    int decision;
 } monster_stats_t;
 
 player_stats_t *my_player_stats_generation(player_stats_t *player_stats);
 monster_stats_t *my_monster_stats_generation(monster_stats_t *monster_stats, int player_level);
 int my_random(int level);
 int my_fight(int i, player_stats_t *player_stats, monster_stats_t *monster_stats);
+void defense_button(fbutton_t *button, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats);
+void attack_button(fbutton_t *button, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats);
+void run_away_button(fbutton_t *button, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats);
+void magic_button(fbutton_t *button, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats);
+void change_state_button(fbutton_t *button, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats);
+void intro_scene(window_t *win);
+void declare_buttons(fbutton_t *button);
+void declare_buttons_helper(fbutton_t *button);
+void eventhandler_helper(window_t *win ,fbutton_t * button);
+void display_objects(fbutton_t *button, window_t *win);
+void fight_result(fbutton_t *buttons, window_t *win, player_stats_t *player_stats, monster_stats_t *monster_stats);
 
 #endif /* !FIGHTSYSTEM_H_ */
