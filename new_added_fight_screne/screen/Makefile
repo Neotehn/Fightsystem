@@ -12,6 +12,9 @@ SRC	=	./main.c \
 		./change_state_button.c \
 		./intro_scene.c \
 		./declare_buttons.c \
+		./button_draw.c \
+		./declare_text.c \
+		./init_structures.c \
 
 NAME	=	my_rpg
 

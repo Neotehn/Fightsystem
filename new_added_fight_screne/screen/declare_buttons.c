@@ -4,7 +4,8 @@ void declare_buttons_helper(fbutton_t *button)
 {
     for (int i = 0; i < 4; i++) {
         sfRectangleShape_setPosition(button->rect[i], button->pos[i]);
-        sfRectangleShape_setSize(button->rect[i], (sfVector2f) {400.0, 100.0});
+        sfRectangleShape_setSize(button->rect[i], \
+        (sfVector2f) {400.0, 100.0});
         sfRectangleShape_setFillColor(button->rect[i], sfRed);
         sfRectangleShape_setOutlineColor(button->rect[i], sfBlack);
         sfRectangleShape_setOutlineThickness(button->rect[i], 2.0);

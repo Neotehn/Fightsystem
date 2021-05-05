@@ -9,7 +9,8 @@
 
 int my_random(int level)
 {
-    int num = (rand() %((level) - 1 + 1)) + 1;
+    srand(time(NULL));
+    int num = rand() % level + 1;
     return (num);
 }
 

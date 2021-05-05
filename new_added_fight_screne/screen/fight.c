@@ -13,7 +13,8 @@ void player_attack(player_stats_t *player_stats, monster_stats_t *monster_stats,
         monster_stats->hp = monster_stats->hp - player_stats->attack;
         player_stats->hp = player_stats->hp - monster_stats->attack;
     } else if (i = 2) {
-        monster_stats->hp = monster_stats->hp - (player_stats->attack - monster_stats->defense);
+        monster_stats->hp = monster_stats->hp - \
+        (player_stats->attack - monster_stats->defense);
     } else {
         monster_stats->hp = monster_stats->hp - player_stats->attack;
         player_stats->hp = player_stats->hp - monster_stats->magic;
@@ -23,7 +24,8 @@ void player_attack(player_stats_t *player_stats, monster_stats_t *monster_stats,
 void player_defense(player_stats_t *player_stats, monster_stats_t *monster_stats, int i)
 {
     if (i = 1) {
-        player_stats->hp = player_stats->hp - (player_stats->defense - monster_stats->attack);
+        player_stats->hp = player_stats->hp - \
+        (player_stats->defense - monster_stats->attack);
     } else if (i = 2) {
         if(player_stats->defense < monster_stats->defense)
             player_stats->defense = player_stats->defense - 1;
@@ -52,19 +54,25 @@ void player_run(player_stats_t *player_stats, monster_stats_t *monster_stats)
         player_stats->hp = player_stats->hp - (monster_stats->attack / 2);
 }
 
-int my_fight(int i, player_stats_t *player_stats, monster_stats_t *monster_stats)
+int my_fight(int i, player_stats_t *player_stats, monster_stats_t *monster_stats, window_t *win)
 {
     int enem_turn = my_random(3);
 
-    monster_stats->decision = enem_turn;
-    player_stats->decision = i;
-
+    monster_stats->decision = enem_turn - 1;
+    player_stats->decision = i - 1;
     switch (i) {
         case 1: player_attack(player_stats, monster_stats, enem_turn); break;
         case 2: player_defense(player_stats, monster_stats, enem_turn); break;
         case 3: player_magic(player_stats, monster_stats, enem_turn); break;
         case 4: player_run(player_stats, monster_stats); break;
     }
+    if (player_stats->hp <= 0)
+        win->end = -1;
+    else if (monster_stats->hp <= 0) {
+        win->end = my_random(4);
+    }
     printf("%d\n", player_stats->hp);
     printf("%d\n", monster_stats->hp);  
+    printf("%d\n", player_stats->decision);
+    printf("%d\n", monster_stats->decision);
 }
